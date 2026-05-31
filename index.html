@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宋妮倩 · 作品集</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;600&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f4f0;
+    --gray-100: #e8e7e3;
+    --gray-300: #b0afa9;
+    --gray-500: #6e6d68;
+    --gray-700: #2e2d2a;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 300;
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* ── Cursor ── */
+  .cursor { position:fixed; width:8px; height:8px; background:var(--black); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); }
+  .cursor-ring { position:fixed; width:36px; height:36px; border:1px solid var(--black); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:all 0.18s ease; opacity:0.45; }
+  .cursor-ring.expand { transform:translate(-50%,-50%) scale(1.9); opacity:0.15; }
+
+  /* ── Music Player ── */
+  .music-player {
+    position: fixed;
+    bottom: 36px; right: 36px;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(10,10,10,0.82);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 12px 20px 12px 14px;
+    transition: opacity 0.4s;
+  }
+  .music-btn {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: none;
+    color: var(--white);
+    cursor: none;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  .music-btn:hover { background: var(--white); color: var(--black); }
+  .music-btn svg { width: 12px; height: 12px; fill: currentColor; }
+  .music-info { display: flex; flex-direction: column; gap: 2px; }
+  .music-title { font-size: 0.6rem; letter-spacing: 0.2em; color: var(--gray-300); text-transform: uppercase; }
+  .music-bars { display: flex; gap: 3px; align-items: flex-end; height: 14px; }
+  .music-bar {
+    width: 2px; background: var(--gray-500);
+    animation: barBounce 1.2s ease-in-out infinite;
+  }
+  .music-bar:nth-child(1) { height:6px; animation-delay:0s; }
+  .music-bar:nth-child(2) { height:10px; animation-delay:0.2s; }
+  .music-bar:nth-child(3) { height:14px; animation-delay:0.1s; }
+  .music-bar:nth-child(4) { height:8px; animation-delay:0.3s; }
+  .music-bar:nth-child(5) { height:12px; animation-delay:0.15s; }
+  @keyframes barBounce {
+    0%,100% { transform: scaleY(0.4); opacity:0.4; }
+    50% { transform: scaleY(1); opacity:1; }
+  }
+  .music-bars.paused .music-bar { animation-play-state: paused; opacity: 0.25; }
+
+  /* ── Nav ── */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:28px 60px;
+    transition:background 0.4s, padding 0.4s;
+  }
+  nav.scrolled {
+    background:rgba(245,244,240,0.95);
+    backdrop-filter:blur(10px);
+    padding:18px 60px;
+    border-bottom:1px solid var(--gray-100);
+  }
+  .nav-logo { font-family:'Cormorant Garamond',serif; font-size:1.05rem; letter-spacing:0.35em; text-transform:uppercase; text-decoration:none; color:var(--black); font-weight:300; }
+  .nav-links { display:flex; gap:48px; list-style:none; }
+  .nav-links a { text-decoration:none; color:var(--gray-500); font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; transition:color 0.3s; font-weight:300; }
+  .nav-links a:hover { color:var(--black); }
+
+  /* ── Hero ── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    display:flex; flex-direction:column; justify-content:flex-end;
+    padding: 0 80px 80px;
+    position:relative; z-index:2;
+  }
+  .hero-index {
+    font-family:'Cormorant Garamond',serif;
+    font-size:0.68rem; letter-spacing:0.3em; color:var(--gray-500);
+    text-transform:uppercase; margin-bottom:36px;
+  }
+  .hero-name {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(3.5rem,7vw,6rem);
+    font-weight:300; color:var(--white);
+    line-height:1.0; letter-spacing:-0.01em; margin-bottom:8px;
+  }
+  .hero-name-cn {
+    font-family:'Noto Serif SC',serif;
+    font-size:clamp(1.1rem,2.2vw,1.6rem);
+    font-weight:300; color:var(--gray-300);
+    letter-spacing:0.5em; margin-bottom:44px;
+  }
+  .hero-title {
+    font-size:0.7rem; letter-spacing:0.2em; color:var(--gray-500);
+    border-left:1px solid var(--gray-700); padding-left:20px; line-height:2;
+  }
+  /* Hero right: big PORTFOLIO text + grid */
+  .hero-right {
+    position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hero-right::before {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(135deg,#181818 0%,#0a0a0a 100%); z-index:1;
+  }
+  .hero-grid-lines {
+    position:absolute; inset:0; z-index:2; opacity:0.05;
+    background-image: linear-gradient(var(--white) 1px,transparent 1px), linear-gradient(90deg,var(--white) 1px,transparent 1px);
+    background-size:80px 80px;
+  }
+  .hero-portfolio-text {
+    position:absolute;
+    z-index:3;
+    text-align:center;
+    pointer-events:none;
+  }
+  .hero-portfolio-big {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(3.5rem,7.5vw,7.5rem);
+    font-weight:300;
+    color:transparent;
+    -webkit-text-stroke:1px rgba(255,255,255,0.22);
+    letter-spacing:0.1em;
+    line-height:0.95;
+    display:block;
+    white-space:nowrap;
+  }
+  .hero-portfolio-design {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(0.65rem,1.1vw,0.9rem);
+    letter-spacing:0.55em;
+    color:rgba(255,255,255,0.14);
+    display:block;
+    margin-top:10px;
+    text-transform:uppercase;
+  }
+  .hero-portfolio-year {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(0.75rem,1.4vw,1.1rem);
+    letter-spacing:0.6em;
+    color:rgba(255,255,255,0.22);
+    display:block;
+    margin-top:16px;
+  }
+  .hero-contact-strip {
+    position:absolute; bottom:80px; right:60px; z-index:4; text-align:right;
+  }
+  .hero-contact-strip span { display:block; font-size:0.6rem; letter-spacing:0.15em; color:var(--gray-500); margin-bottom:6px; text-transform:uppercase; }
+  .hero-contact-strip a { color:var(--gray-300); text-decoration:none; font-size:0.65rem; letter-spacing:0.08em; }
+  .scroll-hint {
+    position:absolute; bottom:40px; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:12px; z-index:10;
+  }
+  .scroll-hint span { font-size:0.58rem; letter-spacing:0.3em; color:var(--gray-500); text-transform:uppercase; }
+  .scroll-line { width:1px; height:60px; background:linear-gradient(to bottom,var(--gray-500),transparent); animation:scrollPulse 2s ease-in-out infinite; }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+
+  /* ── Sections ── */
+  section { padding:140px 0; }
+  .container { max-width:1200px; margin:0 auto; padding:0 60px; }
+  .section-label { font-size:0.62rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--gray-300); margin-bottom:14px; font-family:'Cormorant Garamond',serif; }
+  .section-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,4vw,3.2rem); font-weight:300; line-height:1.1; letter-spacing:-0.01em; margin-bottom:80px; }
+  .h-rule { border:none; border-top:1px solid var(--gray-100); }
+
+  /* ── About ── */
+  #about { background:var(--white); }
+  .about-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:120px; align-items:start; }
+  .about-portrait { width:100%; aspect-ratio:3/4; background:var(--gray-100); overflow:hidden; }
+  .about-portrait img { width:100%; height:100%; object-fit:cover; object-position:center center; filter:grayscale(100%); transition:filter 0.6s; }
+  .about-portrait:hover img { filter:grayscale(50%); }
+  .about-portrait-caption { margin-top:18px; font-size:0.62rem; letter-spacing:0.2em; color:var(--gray-300); text-transform:uppercase; }
+  .about-intro {
+    font-family:'Noto Serif SC',serif;
+    font-size:0.95rem; line-height:2.4; color:var(--gray-700);
+    margin-bottom:60px; font-weight:300;
+    border-left:1px solid var(--gray-100); padding-left:28px;
+  }
+  .about-stats { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--gray-100); border-left:1px solid var(--gray-100); margin-bottom:60px; }
+  .stat-item { padding:24px 20px; border-right:1px solid var(--gray-100); border-bottom:1px solid var(--gray-100); }
+  .stat-num { font-family:'Cormorant Garamond',serif; font-size:2.4rem; font-weight:300; letter-spacing:-0.02em; margin-bottom:4px; }
+  .stat-label { font-size:0.6rem; letter-spacing:0.18em; color:var(--gray-300); text-transform:uppercase; }
+  .skills-title { font-size:0.6rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gray-300); margin-bottom:18px; }
+  .skills-tags { display:flex; flex-wrap:wrap; gap:8px; }
+  .skill-tag { padding:6px 14px; border:1px solid var(--gray-100); font-size:0.63rem; letter-spacing:0.08em; color:var(--gray-500); text-transform:uppercase; transition:all 0.3s; }
+  .skill-tag:hover { background:var(--black); color:var(--white); border-color:var(--black); }
+
+  /* ── Resume ── */
+  #resume { background:var(--black); color:var(--white); }
+  #resume .section-label { color:var(--gray-500); }
+  #resume .section-title { color:var(--white); }
+  .resume-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; }
+  .resume-col-title { font-size:0.6rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--gray-500); margin-bottom:36px; padding-bottom:14px; border-bottom:1px solid var(--gray-700); }
+  .timeline-item { padding:26px 0 26px 20px; border-bottom:1px solid rgba(255,255,255,0.04); position:relative; }
+  .timeline-item::before { content:''; position:absolute; left:0; top:34px; width:4px; height:4px; background:var(--gray-500); border-radius:50%; }
+  .timeline-period { font-family:'Cormorant Garamond',serif; font-size:0.75rem; letter-spacing:0.1em; color:var(--gray-500); margin-bottom:5px; }
+  .timeline-role { font-family:'Noto Serif SC',serif; font-size:0.92rem; font-weight:400; color:var(--white); margin-bottom:3px; }
+  .timeline-org { font-size:0.7rem; letter-spacing:0.06em; color:var(--gray-300); margin-bottom:8px; }
+  .timeline-desc { font-size:0.7rem; color:var(--gray-500); line-height:1.9; }
+  .awards-list { margin-top:60px; padding-top:60px; border-top:1px solid var(--gray-700); }
+  .awards-col-title { font-size:0.6rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--gray-500); margin-bottom:36px; }
+  .award-item { display:grid; grid-template-columns:80px 1fr; gap:24px; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.04); align-items:baseline; }
+  .award-year { font-family:'Cormorant Garamond',serif; font-size:0.75rem; letter-spacing:0.06em; color:var(--gray-500); }
+  .award-desc { font-size:0.75rem; color:var(--gray-300); line-height:1.9; }
+
+  /* ── Portfolio ── */
+  #portfolio { background:var(--white); }
+  .portfolio-intro { display:grid; grid-template-columns:1fr 1fr; gap:80px; margin-bottom:80px; align-items:end; }
+  .portfolio-intro-text { font-family:'Noto Serif SC',serif; font-size:0.88rem; line-height:2.3; color:var(--gray-500); }
+  .btn-outline { display:inline-block; padding:13px 34px; border:1px solid var(--black); font-size:0.63rem; letter-spacing:0.22em; text-transform:uppercase; text-decoration:none; color:var(--black); transition:all 0.4s; position:relative; overflow:hidden; background:none; cursor:none; }
+  .btn-outline::before { content:''; position:absolute; inset:0; background:var(--black); transform:translateX(-101%); transition:transform 0.4s; }
+  .btn-outline span { position:relative; z-index:1; }
+  .btn-outline:hover { color:var(--white); }
+  .btn-outline:hover::before { transform:translateX(0); }
+
+  /* Projects grid */
+  .projects-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--gray-100); }
+  .project-card { background:var(--white); position:relative; overflow:hidden; cursor:none; }
+  .project-card.large { grid-column:span 2; }
+  .project-thumb { overflow:hidden; position:relative; }
+  .project-card:not(.large) .project-thumb { aspect-ratio:4/3; }
+  .project-card.large .project-thumb { aspect-ratio:16/9; }
+  .project-thumb img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.7s ease, filter 0.5s ease; filter:grayscale(20%); }
+  .project-card:hover .project-thumb img { transform:scale(1.05); filter:grayscale(0%); }
+  /* Fallback placeholder */
+  .project-thumb-placeholder {
+    width:100%; height:100%; position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .thumb-1 { background:linear-gradient(135deg,#1a1a1a,#3d3c38); }
+  .thumb-2 { background:linear-gradient(160deg,#e8e7e3,#b0afa9); }
+  .thumb-3 { background:linear-gradient(120deg,#2e2d2a,#6e6d68); }
+  .thumb-4 { background:linear-gradient(180deg,#f5f4f0,#b0afa9); }
+  .thumb-5 { background:linear-gradient(150deg,#0a0a0a,#3d3c38); }
+  .thumb-6 { background:linear-gradient(130deg,#6e6d68,#2e2d2a); }
+  .thumb-7 { background:linear-gradient(165deg,#e8e7e3,#6e6d68); }
+  .thumb-8 { background:linear-gradient(140deg,#1a1a1a,#b0afa9); }
+  .thumb-9 { background:linear-gradient(155deg,#2e2d2a,#e8e7e3); }
+  .thumb-num { font-family:'Cormorant Garamond',serif; font-size:5rem; font-weight:300; color:rgba(255,255,255,0.07); position:absolute; bottom:-8px; right:8px; line-height:1; letter-spacing:-0.05em; pointer-events:none; }
+  .thumb-2 .thumb-num, .thumb-4 .thumb-num, .thumb-7 .thumb-num, .thumb-9 .thumb-num { color:rgba(0,0,0,0.06); }
+  .project-info { padding:24px 26px 30px; border-top:1px solid var(--gray-100); }
+  .project-cat { font-size:0.58rem; letter-spacing:0.28em; color:var(--gray-300); text-transform:uppercase; margin-bottom:7px; }
+  .project-name { font-family:'Noto Serif SC',serif; font-size:0.95rem; font-weight:400; margin-bottom:3px; transition:opacity 0.3s; }
+  .project-card:hover .project-name { opacity:0.55; }
+  .project-name-en { font-family:'Cormorant Garamond',serif; font-size:0.78rem; color:var(--gray-300); font-style:italic; }
+  .project-arrow { position:absolute; bottom:24px; right:24px; width:30px; height:30px; border:1px solid var(--gray-100); display:flex; align-items:center; justify-content:center; font-size:0.75rem; color:var(--gray-300); transition:all 0.3s; transform:rotate(-45deg); }
+  .project-card:hover .project-arrow { background:var(--black); border-color:var(--black); color:var(--white); transform:rotate(0deg); }
+
+  /* ZS Featured project - new layout */
+  .zs-feature { margin-top:2px; background:var(--black); padding:0; }
+  .zs-imgrow { display:grid; grid-template-columns:repeat(3,1fr); gap:3px; }
+  .zs-imgrow-item { overflow:hidden; }
+  .zs-imgrow-item img { width:100%; height:auto; display:block; filter:grayscale(20%); transition:filter 0.5s, transform 0.6s; }
+  .zs-imgrow-item:hover img { filter:grayscale(0%); transform:scale(1.02); }
+  .zs-bottom { display:grid; grid-template-columns:1fr 1fr; gap:60px; padding:60px 60px; align-items:center; }
+  .zs-aerial { overflow:hidden; }
+  .zs-aerial img { width:100%; height:auto; display:block; filter:grayscale(20%); transition:filter 0.5s; }
+  .zs-aerial:hover img { filter:grayscale(0%); }
+  .zs-cat { font-size:0.6rem; letter-spacing:0.35em; color:var(--gray-500); text-transform:uppercase; margin-bottom:16px; }
+  .zs-title { font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:300; color:var(--white); line-height:1; letter-spacing:-0.01em; margin-bottom:8px; }
+  .zs-subtitle { font-family:'Noto Serif SC',serif; font-size:0.85rem; color:var(--gray-500); margin-bottom:36px; letter-spacing:0.08em; }
+  .zs-rule { width:32px; height:1px; background:var(--gray-700); margin-bottom:28px; }
+  .zs-desc { font-family:'Noto Serif SC',serif; font-size:0.82rem; line-height:2.3; color:var(--gray-300); }
+
+  /* 你好视界 Featured */
+  .nihao-feature {
+    margin-top: 2px;
+    background: var(--white);
+    padding: 100px 60px;
+  }
+  .nihao-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: start;
+    margin-bottom: 48px;
+  }
+  .nihao-text-col {}
+  .nihao-cat { font-size:0.6rem; letter-spacing:0.35em; color:var(--gray-300); text-transform:uppercase; margin-bottom:16px; }
+  .nihao-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,4.5vw,4rem); font-weight:300; color:var(--black); line-height:1; letter-spacing:-0.02em; margin-bottom:8px; }
+  .nihao-title-cn { font-family:'Noto Serif SC',serif; font-size:0.9rem; color:var(--gray-300); letter-spacing:0.2em; margin-bottom:32px; }
+  .nihao-rule { width:32px; height:1px; background:var(--gray-100); margin-bottom:28px; }
+  .nihao-desc { font-family:'Noto Serif SC',serif; font-size:0.82rem; line-height:2.4; color:var(--gray-500); }
+  /* Hero image right */
+  .nihao-hero { overflow:hidden; aspect-ratio:16/9; }
+  .nihao-hero img { width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(15%); transition:filter 0.6s, transform 0.7s; }
+  .nihao-hero:hover img { filter:grayscale(0%); transform:scale(1.03); }
+  /* Bottom strip: 3 equal */
+  .nihao-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:3px; }
+  .nihao-strip .ns-img { aspect-ratio:16/9; overflow:hidden; }
+  .nihao-strip .ns-img img { width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(20%); transition:filter 0.5s, transform 0.6s; }
+  .nihao-strip .ns-img:hover img { filter:grayscale(0%); transform:scale(1.04); }
+
+  /* 目木酒店 Featured */
+  .mumu-feature {
+    margin-top: 2px;
+    background: #0f0e0c;
+    padding: 100px 60px;
+  }
+  .mumu-inner {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  /* Left: vertical gallery */
+  .mumu-gallery { display:flex; flex-direction:column; gap:3px; }
+  .mumu-gallery .mm-main { aspect-ratio:16/9; overflow:hidden; }
+  .mumu-gallery .mm-row { display:grid; grid-template-columns:1fr 1fr; gap:3px; }
+  .mumu-gallery .mm-img { aspect-ratio:4/3; overflow:hidden; }
+  .mumu-gallery img { width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(20%); transition:filter 0.6s, transform 0.7s; }
+  .mumu-gallery .mm-main:hover img,
+  .mumu-gallery .mm-img:hover img { filter:grayscale(0%); transform:scale(1.04); }
+  /* Right: text */
+  .mumu-text { position:sticky; top:120px; }
+  .mumu-cat { font-size:0.6rem; letter-spacing:0.35em; color:var(--gray-500); text-transform:uppercase; margin-bottom:16px; }
+  .mumu-title { font-family:'Cormorant Garamond',serif; font-size:clamp(3rem,5vw,5rem); font-weight:300; color:var(--white); line-height:1; letter-spacing:-0.02em; margin-bottom:6px; }
+  .mumu-title-cn { font-family:'Noto Serif SC',serif; font-size:0.88rem; color:var(--gray-500); letter-spacing:0.25em; margin-bottom:32px; }
+  .mumu-rule { width:32px; height:1px; background:var(--gray-700); margin-bottom:28px; }
+  .mumu-desc { font-family:'Noto Serif SC',serif; font-size:0.82rem; line-height:2.4; color:var(--gray-300); }
+  .mumu-num { font-family:'Cormorant Garamond',serif; font-size:10rem; font-weight:300; color:rgba(255,255,255,0.03); line-height:1; letter-spacing:-0.05em; margin-top:40px; text-align:right; }
+
+  @media(max-width:900px){
+    .nihao-inner,.mumu-inner { grid-template-columns:1fr; gap:40px; }
+    .nihao-strip { grid-template-columns:1fr; }
+    .mumu-gallery .mm-row { grid-template-columns:1fr; }
+    .nihao-feature,.mumu-feature { padding:60px 28px; }
+    .mumu-text { position:static; }
+  }
+
+  /* 春和蝶序 Featured */
+  .spring-feature {
+    margin-top: 2px;
+    background: #06080f;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Scrolling cinematic image rail */
+  .spring-hero {
+    width: 100%;
+    height: 85vh;
+    min-height: 540px;
+    position: relative;
+    overflow: hidden;
+  }
+  .spring-slides {
+    display: flex;
+    height: 100%;
+    transition: transform 0.9s cubic-bezier(0.77,0,0.175,1);
+  }
+  .spring-slide {
+    min-width: 100%;
+    height: 100%;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .spring-slide img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    filter: brightness(0.72) grayscale(10%);
+    transform: scale(1.03);
+    transition: filter 1s, transform 6s ease;
+  }
+  .spring-slide.active img { filter: brightness(0.82) grayscale(0%); transform: scale(1); }
+  /* Overlay text on hero */
+  .spring-hero-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: flex-end;
+    padding: 60px 80px;
+    background: linear-gradient(to top, rgba(6,8,15,0.88) 0%, rgba(6,8,15,0.1) 50%, transparent 100%);
+    z-index: 2;
+  }
+  .spring-hero-text { flex: 1; }
+  .spring-hero-cat { font-size:0.6rem; letter-spacing:0.4em; color:rgba(255,255,255,0.35); text-transform:uppercase; margin-bottom:14px; }
+  .spring-hero-title {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(3rem,7vw,6.5rem);
+    font-weight:300; color:var(--white);
+    line-height:0.95; letter-spacing:-0.02em; margin-bottom:6px;
+  }
+  .spring-hero-title em { font-style:italic; color:rgba(255,255,255,0.4); }
+  .spring-hero-sub { font-family:'Noto Serif SC',serif; font-size:0.82rem; color:rgba(255,255,255,0.45); letter-spacing:0.15em; margin-bottom:32px; }
+  /* Dot nav */
+  .spring-dots { display:flex; gap:10px; align-items:center; }
+  .spring-dot {
+    width:24px; height:1px; background:rgba(255,255,255,0.25);
+    cursor:none; transition:all 0.3s;
+  }
+  .spring-dot.active { width:48px; background:rgba(255,255,255,0.8); }
+  /* Arrow nav */
+  .spring-hero-nav { display:flex; gap:10px; align-self:flex-end; padding-bottom:4px; }
+  .spring-nav-btn {
+    width:44px; height:44px;
+    border:1px solid rgba(255,255,255,0.2);
+    background:none; color:rgba(255,255,255,0.6);
+    font-size:1rem; cursor:none;
+    display:flex; align-items:center; justify-content:center;
+    transition:all 0.3s;
+  }
+  .spring-nav-btn:hover { border-color:rgba(255,255,255,0.8); color:var(--white); background:rgba(255,255,255,0.1); }
+  /* Concept text section */
+  .spring-concept {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .spring-concept-col {
+    padding: 60px 60px;
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
+  .spring-concept-col:last-child { border-right: none; }
+  .spring-concept-label { font-size:0.58rem; letter-spacing:0.35em; color:rgba(255,255,255,0.2); text-transform:uppercase; margin-bottom:20px; }
+  .spring-concept-quote {
+    font-family:'Noto Serif SC',serif;
+    font-size:1.05rem; font-weight:300;
+    color:rgba(255,255,255,0.75); line-height:2.2;
+    margin-bottom:20px;
+    border-left:1px solid rgba(255,255,255,0.1);
+    padding-left:20px;
+  }
+  .spring-concept-source { font-family:'Cormorant Garamond',serif; font-size:0.75rem; color:rgba(255,255,255,0.25); font-style:italic; }
+  .spring-concept-body { font-family:'Noto Serif SC',serif; font-size:0.78rem; line-height:2.4; color:rgba(255,255,255,0.35); }
+  /* Thumbnail row */
+  .spring-thumbrow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+  }
+  .spring-thumb-item {
+    aspect-ratio: 16/9; overflow:hidden; cursor:none;
+    position: relative;
+  }
+  .spring-thumb-item img {
+    width:100%; height:100%; object-fit:cover; display:block;
+    filter:grayscale(40%) brightness(0.65);
+    transition:filter 0.5s, transform 0.6s;
+  }
+  .spring-thumb-item:hover img { filter:grayscale(0%) brightness(1); transform:scale(1.05); }
+  .spring-thumb-item.active-thumb img { filter:grayscale(0%) brightness(0.9); }
+  .spring-thumb-item::after {
+    content:''; position:absolute; bottom:0; left:0; right:0;
+    height:2px; background:var(--white); transform:scaleX(0);
+    transition:transform 0.3s;
+  }
+  .spring-thumb-item.active-thumb::after { transform:scaleX(1); }
+
+  @media(max-width:900px){
+    .spring-hero { height:60vh; }
+    .spring-hero-overlay { padding:32px 28px; }
+    .spring-concept { grid-template-columns:1fr; }
+    .spring-concept-col { padding:40px 28px; border-right:none; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .spring-thumbrow { grid-template-columns:repeat(2,1fr); }
+  }
+
+  /* 瑧玥映天华 居住区 Featured */
+  .resi-feature {
+    margin-top: 2px;
+    background: var(--white);
+  }
+  /* Top: full-width hero + name overlay */
+  .resi-hero {
+    position: relative;
+    aspect-ratio: 21/8;
+    overflow: hidden;
+  }
+  .resi-hero img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    filter: grayscale(15%) brightness(0.88);
+    transition: filter 1s, transform 1.2s;
+  }
+  .resi-feature:hover .resi-hero img { filter: grayscale(0%) brightness(1); transform: scale(1.02); }
+  .resi-hero-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: flex-end; padding: 56px 80px;
+    background: linear-gradient(to top, rgba(245,244,240,0.92) 0%, transparent 55%);
+  }
+  .resi-hero-title-wrap { flex: 1; }
+  .resi-hero-cat { font-size:0.58rem; letter-spacing:0.4em; color:var(--gray-300); text-transform:uppercase; margin-bottom:12px; }
+  .resi-hero-title {
+    font-family:'Noto Serif SC',serif;
+    font-size:clamp(2rem,4vw,3.8rem);
+    font-weight:400; color:var(--black);
+    line-height:1; letter-spacing:0.1em; margin-bottom:4px;
+  }
+  .resi-hero-en {
+    font-family:'Cormorant Garamond',serif;
+    font-size:1rem; color:var(--gray-300);
+    font-style:italic; letter-spacing:0.06em;
+  }
+  /* Concept bar */
+  .resi-concept {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 0;
+    border-top: 1px solid var(--gray-100);
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .resi-concept-left {
+    padding: 48px 60px;
+    border-right: 1px solid var(--gray-100);
+  }
+  .resi-concept-right { padding: 48px 60px; }
+  .resi-concept-label { font-size:0.58rem; letter-spacing:0.3em; color:var(--gray-300); text-transform:uppercase; margin-bottom:16px; }
+  .resi-concept-name {
+    font-family:'Noto Serif SC',serif;
+    font-size:1.6rem; font-weight:400;
+    line-height:1.4; color:var(--black);
+    margin-bottom:12px; letter-spacing:0.08em;
+  }
+  .resi-concept-name span {
+    font-size:0.65rem; display:block; font-weight:300;
+    color:var(--gray-300); letter-spacing:0.15em; margin-top:6px;
+    font-family:'Cormorant Garamond',serif; font-style:italic;
+  }
+  .resi-concept-body {
+    font-family:'Noto Serif SC',serif;
+    font-size:0.78rem; line-height:2.4; color:var(--gray-500);
+  }
+  /* Masonry-style gallery: 10 images in varied grid */
+  .resi-gallery {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 260px 200px;
+    gap: 3px;
+  }
+  .resi-gallery .rg { overflow: hidden; }
+  .resi-gallery .rg img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    filter: grayscale(20%);
+    transition: filter 0.5s, transform 0.7s;
+  }
+  .resi-gallery .rg:hover img { filter: grayscale(0%); transform: scale(1.05); }
+
+  @media(max-width:900px){
+    .resi-hero { aspect-ratio:4/3; }
+    .resi-hero-overlay { padding:32px 28px; }
+    .resi-concept { grid-template-columns:1fr; }
+    .resi-concept-left { border-right:none; border-bottom:1px solid var(--gray-100); padding:36px 28px; }
+    .resi-concept-right { padding:36px 28px; }
+  }
+
+  /* 山地博物馆 Featured */
+  .museum-feature { margin-top:2px; background:var(--white); }
+  .museum-row2 { display:grid; grid-template-columns:1fr 1fr; gap:3px; }
+  .museum-img-wrap { overflow:hidden; }
+  .museum-img-wrap img { width:100%; height:auto; display:block; filter:grayscale(15%); transition:transform 0.7s, filter 0.5s; }
+  .museum-img-wrap:hover img { transform:scale(1.02); filter:grayscale(0%); }
+  .museum-info-bar { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:40px; padding:40px 60px; border-top:1px solid var(--gray-100); }
+  .museum-num-big { font-family:'Cormorant Garamond',serif; font-size:5rem; font-weight:300; color:var(--gray-100); line-height:1; letter-spacing:-0.04em; }
+  .museum-meta-cat { font-size:0.58rem; letter-spacing:0.35em; color:var(--gray-300); text-transform:uppercase; margin-bottom:8px; }
+  .museum-meta-title { font-family:'Noto Serif SC',serif; font-size:1.2rem; font-weight:400; margin-bottom:4px; }
+  .museum-meta-en { font-family:'Cormorant Garamond',serif; font-size:0.9rem; color:var(--gray-300); font-style:italic; }
+  .museum-desc-col { max-width:380px; }
+  .museum-desc-col p { font-family:'Noto Serif SC',serif; font-size:0.78rem; line-height:2.4; color:var(--gray-500); }
+
+  /* 瑧玥 new gallery rows */
+  .resi-imgrow { display:grid; grid-template-columns:1fr 1fr; gap:3px; margin-bottom:3px; }
+  .resi-img-wrap { overflow:hidden; }
+  .resi-img-wrap img { width:100%; height:auto; display:block; filter:grayscale(15%); transition:filter 0.5s, transform 0.7s; }
+  .resi-img-wrap:hover img { filter:grayscale(0%); transform:scale(1.02); }
+
+  @media(max-width:900px){
+    .zs-imgrow{grid-template-columns:1fr;}
+    .zs-bottom{grid-template-columns:1fr;padding:40px 28px;gap:32px;}
+    .museum-row2 { grid-template-columns:1fr; }
+    .museum-info-bar { grid-template-columns:1fr; gap:20px; padding:32px 28px; }
+    .resi-imgrow { grid-template-columns:1fr; }
+  }
+
+  /* 山地旅馆 Featured */
+  .mountain-feature {
+    margin-top: 2px;
+    background: var(--black);
+  }
+  .mountain-hero-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 21/9;
+    overflow: hidden;
+  }
+  .mountain-hero-wrap > img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    filter: grayscale(30%) brightness(0.7);
+    transition: filter 1s ease, transform 1.2s ease;
+  }
+  .mountain-feature:hover .mountain-hero-wrap > img {
+    filter: grayscale(10%) brightness(0.85);
+    transform: scale(1.02);
+  }
+  .mountain-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: flex-end; justify-content: flex-start;
+    padding: 60px 80px;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 60%);
+  }
+  .mountain-overlay-text { display: flex; flex-direction: column; gap: 6px; }
+  .mountain-ol-num { font-family:'Cormorant Garamond',serif; font-size:0.65rem; letter-spacing:0.4em; color:rgba(255,255,255,0.4); text-transform:uppercase; }
+  .mountain-ol-title { font-family:'Noto Serif SC',serif; font-size:clamp(2.5rem,5vw,5rem); font-weight:300; color:var(--white); line-height:1; letter-spacing:0.15em; }
+  .mountain-ol-en { font-family:'Cormorant Garamond',serif; font-size:1rem; color:rgba(255,255,255,0.45); font-style:italic; letter-spacing:0.08em; }
+  .mountain-body {
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 0;
+  }
+  .mountain-left {
+    padding: 70px 60px;
+    border-right: 1px solid var(--gray-700);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .mountain-cat { font-size:0.58rem; letter-spacing:0.35em; color:var(--gray-500); text-transform:uppercase; margin-bottom:20px; }
+  .mountain-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,3.5vw,3rem); font-weight:300; color:var(--white); line-height:1.1; margin-bottom:28px; }
+  .mountain-title em { font-style:italic; color:var(--gray-500); }
+  .mountain-rule { width:32px; height:1px; background:var(--gray-700); margin-bottom:24px; }
+  .mountain-desc { font-family:'Noto Serif SC',serif; font-size:0.8rem; line-height:2.4; color:var(--gray-300); }
+  .mountain-right { padding: 0; }
+  .mountain-sub-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 240px 240px;
+    gap: 2px;
+    height: 100%;
+  }
+  .msub-img { overflow: hidden; }
+  .msub-img.msub-wide { grid-column: span 2; }
+  .msub-img img { width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(25%); transition:filter 0.5s, transform 0.7s; }
+  .msub-img:hover img { filter:grayscale(0%); transform:scale(1.05); }
+
+  @media(max-width:900px){
+    .mountain-hero-wrap { aspect-ratio:16/9; }
+    .mountain-overlay { padding:32px; }
+    .mountain-body { grid-template-columns:1fr; }
+    .mountain-left { padding:40px 28px; border-right:none; border-bottom:1px solid var(--gray-700); }
+    .mountain-sub-grid { grid-template-rows:180px 180px; }
+  }
+
+  /* 谧海 Featured project */
+  .mihai-feature {
+    margin-top: 2px;
+    background: var(--white);
+    padding: 100px 60px;
+  }
+  .mihai-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: end;
+    margin-bottom: 64px;
+  }
+  .mihai-cat { font-size:0.6rem; letter-spacing:0.35em; color:var(--gray-300); text-transform:uppercase; margin-bottom:16px; }
+  .mihai-title {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(2.8rem,5vw,5rem);
+    font-weight:300; color:var(--black);
+    line-height:1; letter-spacing:-0.02em; margin-bottom:6px;
+  }
+  .mihai-subtitle { font-family:'Noto Serif SC',serif; font-size:0.85rem; color:var(--gray-300); letter-spacing:0.1em; }
+  .mihai-rule { width:32px; height:1px; background:var(--gray-100); margin: 28px 0; }
+  .mihai-desc { font-family:'Noto Serif SC',serif; font-size:0.85rem; line-height:2.4; color:var(--gray-500); }
+  /* Cinematic strip: 1 hero + 2 stacked right */
+  .mihai-gallery-top {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3px;
+    margin-bottom: 3px;
+  }
+  .mihai-gallery-top .mg-hero { aspect-ratio:16/9; overflow:hidden; }
+  .mihai-gallery-top .mg-side { display:flex; flex-direction:column; gap:3px; }
+  .mihai-gallery-top .mg-side .mg-img { flex:1; overflow:hidden; }
+  /* Bottom strip: 3 equal */
+  .mihai-gallery-bottom {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+  }
+  .mihai-gallery-bottom .mg-img { aspect-ratio:4/3; overflow:hidden; }
+  .mg-hero img, .mg-img img {
+    width:100%; height:100%; object-fit:cover; display:block;
+    filter:grayscale(15%);
+    transition:transform 0.7s ease, filter 0.5s ease;
+  }
+  .mg-hero:hover img, .mg-img:hover img { transform:scale(1.04); filter:grayscale(0%); }
+
+  @media(max-width:900px){
+    .mihai-header { grid-template-columns:1fr; gap:40px; }
+    .mihai-gallery-top { grid-template-columns:1fr; }
+    .mihai-gallery-top .mg-side { flex-direction:row; }
+    .mihai-gallery-bottom { grid-template-columns:1fr; }
+    .mihai-feature { padding:60px 28px; }
+  }
+
+  /* Contact */
+  #contact { background:var(--black); color:var(--white); min-height:55vh; display:flex; align-items:center; }
+  .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+  .contact-headline { font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,6vw,5rem); font-weight:300; line-height:1.0; color:var(--white); letter-spacing:-0.02em; }
+  .contact-headline em { font-style:italic; color:var(--gray-500); }
+  .contact-details { display:flex; flex-direction:column; gap:26px; }
+  .contact-item-label { font-size:0.58rem; letter-spacing:0.3em; color:var(--gray-500); text-transform:uppercase; margin-bottom:5px; }
+  .contact-item-value { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--gray-300); letter-spacing:0.04em; text-decoration:none; transition:color 0.3s; display:block; }
+  .contact-item-value:hover { color:var(--white); }
+
+  footer { background:var(--black); border-top:1px solid var(--gray-700); padding:28px 60px; display:flex; justify-content:space-between; align-items:center; }
+  footer span { font-size:0.6rem; letter-spacing:0.15em; color:var(--gray-500); text-transform:uppercase; }
+
+  /* PDF Modal */
+  .pdf-modal { display:none; position:fixed; inset:0; z-index:200; background:rgba(10,10,10,0.96); align-items:center; justify-content:center; }
+  .pdf-modal.open { display:flex; }
+  .pdf-modal-inner { width:90vw; height:90vh; position:relative; }
+  .pdf-modal iframe { width:100%; height:100%; border:none; }
+  .pdf-close { position:absolute; top:-46px; right:0; background:none; border:1px solid var(--gray-700); color:var(--white); padding:8px 20px; font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; cursor:none; transition:all 0.3s; }
+  .pdf-close:hover { background:var(--white); color:var(--black); }
+
+  /* Video Modal */
+  .video-modal { display:none; position:fixed; inset:0; z-index:210; background:rgba(0,0,0,0.97); align-items:center; justify-content:center; }
+  .video-modal.open { display:flex; }
+  .video-modal-inner { width:90vw; max-width:1100px; position:relative; }
+  .video-modal-inner video { width:100%; display:block; background:#000; }
+  .video-close { position:absolute; top:-46px; right:0; background:none; border:1px solid var(--gray-700); color:var(--white); padding:8px 20px; font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; cursor:none; transition:all 0.3s; }
+  .video-close:hover { background:var(--white); color:var(--black); }
+  .video-title-bar { padding:16px 0 0; display:flex; justify-content:space-between; align-items:baseline; }
+  .video-title-bar span:first-child { font-family:'Noto Serif SC',serif; font-size:0.9rem; color:var(--white); letter-spacing:0.1em; }
+  .video-title-bar span:last-child { font-family:'Cormorant Garamond',serif; font-size:0.75rem; color:var(--gray-500); font-style:italic; }
+
+  /* Video play hint on card */
+  .video-play-hint { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:rgba(0,0,0,0.35); transition:background 0.3s; }
+  .video-play-hint span { font-size:0.65rem; letter-spacing:0.2em; color:rgba(255,255,255,0.7); text-transform:uppercase; }
+  .project-card:hover .video-play-hint { background:rgba(0,0,0,0.5); }
+  .project-card:hover .video-play-hint svg { transform:scale(1.15); }
+
+  /* Animations */
+  .fade-up { opacity:0; transform:translateY(28px); transition:opacity 0.8s ease,transform 0.8s ease; }
+  .fade-up.visible { opacity:1; transform:translateY(0); }
+  .delay-1 { transition-delay:0.1s; }
+  .delay-2 { transition-delay:0.2s; }
+  .delay-3 { transition-delay:0.3s; }
+
+  @media(max-width:900px){
+    nav,nav.scrolled{padding:22px 28px;}
+    .nav-links{display:none;}
+    #hero{grid-template-columns:1fr;}
+    .hero-right{display:none;}
+    .hero-left{padding:100px 28px 70px;}
+    .about-grid,.resume-grid,.contact-grid,.portfolio-intro{grid-template-columns:1fr;gap:48px;}
+    .projects-grid{grid-template-columns:1fr;}
+    .project-card.large{grid-column:span 1;}
+    .container{padding:0 28px;}
+    section{padding:100px 0;}
+    footer{padding:24px 28px;flex-direction:column;gap:10px;text-align:center;}
+    .music-player{bottom:20px;right:20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Music Player -->
+<div class="music-player" id="musicPlayer">
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="播放 / 暂停">
+    <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+  </button>
+  <div class="music-info">
+    <span class="music-title">A Minor · Ambient</span>
+    <div class="music-bars paused" id="musicBars">
+      <div class="music-bar"></div>
+      <div class="music-bar"></div>
+      <div class="music-bar"></div>
+      <div class="music-bar"></div>
+      <div class="music-bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">Song Niqian</a>
+  <ul class="nav-links">
+    <li><a href="#about">关于</a></li>
+    <li><a href="#resume">经历</a></li>
+    <li><a href="#portfolio">作品集</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-index">Personal Work Collection</div>
+    <h1 class="hero-name">Song<br>Design</h1>
+    <div class="hero-title">
+      建筑学 · 室内设计<br>
+      设计助理 · 工程项目管理方向<br>
+      Architecture &amp; Interior Design
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-grid-lines"></div>
+    <div class="hero-portfolio-text">
+      <span class="hero-portfolio-big">PORT</span><span class="hero-portfolio-big">FOLIO</span>
+      <span class="hero-portfolio-year">2020 ——— 2026</span>
+      <span class="hero-portfolio-design">Song Design</span>
+    </div>
+
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="container">
+    <div class="section-label">01 — About</div>
+    <div class="about-grid">
+      <div class="fade-up">
+        <div class="about-portrait">
+          <img src="about_photo.jpg" alt="宋妮倩" style="object-position:center center;filter:grayscale(100%);" onerror="this.style.background='#e8e7e3'">
+        </div>
+        <p class="about-portrait-caption">Song Niqian · Chengdu</p>
+      </div>
+      <div>
+        <div class="section-title">设计，<br>是对情绪、光影<br><em style="font-style:italic;font-family:'Cormorant Garamond',serif;font-size:1.1em;">与生活的表达</em></div>
+        <div class="about-intro fade-up">
+          建筑与室内设计于我而言，不只是空间的构建与陈设，更是一种关于情绪、光影与生活方式的表达。<br><br>
+          我喜欢在旅途中感受不同城市的气息，观察建筑、室内空间与人与环境之间的关系，留意材质、尺度、光线与细节所营造出的氛围；也习惯从书籍、艺术与日常生活中汲取灵感，在不断的观看与思考中建立自己的审美感知。<br><br>
+          我始终相信，好的设计不仅关乎形式与美感，更关乎人与空间之间真实而细腻的连接。希望未来能够将所见、所感与情绪融入建筑与室内设计之中，创造兼具美学、温度与生命力的空间体验。
+        </div>
+        <div class="about-stats fade-up delay-1">
+          <div class="stat-item">
+            <div class="stat-num">6</div>
+            <div class="stat-label">年学习经历</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">12+</div>
+            <div class="stat-label">设计项目</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">8+</div>
+            <div class="stat-label">荣誉奖项</div>
+          </div>
+        </div>
+        <div class="fade-up delay-2">
+          <div class="skills-title">掌握技能</div>
+          <div class="skills-tags">
+            <span class="skill-tag">Photoshop</span>
+            <span class="skill-tag">InDesign</span>
+            <span class="skill-tag">Premiere</span>
+            <span class="skill-tag">SketchUp</span>
+            <span class="skill-tag">CAD</span>
+            <span class="skill-tag">Enscape</span>
+            <span class="skill-tag">Lumion</span>
+            <span class="skill-tag">V-Ray</span>
+            <span class="skill-tag">BIM</span>
+            <span class="skill-tag">Revit</span>
+            <span class="skill-tag">酷家乐</span>
+            <span class="skill-tag">犀牛</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="h-rule">
+
+<!-- Resume -->
+<section id="resume">
+  <div class="container">
+    <div class="section-label">02 — Experience</div>
+    <div class="section-title" style="color:var(--white)">教育与工作经历</div>
+    <div class="resume-grid">
+      <div>
+        <div class="resume-col-title">Education · 教育经历</div>
+        <div class="timeline-item fade-up">
+          <div class="timeline-period">2020 — 2023</div>
+          <div class="timeline-role">建筑室内设计 · 专科</div>
+          <div class="timeline-org">四川建筑职业技术学院</div>
+          <div class="timeline-desc">室内设计原理、室内环境与设备、装饰材料与施工工艺、办公空间及住宅空间设计、工程造价等</div>
+        </div>
+        <div class="timeline-item fade-up delay-1">
+          <div class="timeline-period">2023 — 至今</div>
+          <div class="timeline-role">建筑学 · 本科（专升本）</div>
+          <div class="timeline-org">西南交通大学希望学院</div>
+          <div class="timeline-desc">外国建筑史、建筑构造、建筑设计、景观设计、快题设计、建筑物理、遗产保护与社区更新、BIM建模等</div>
+        </div>
+      </div>
+      <div>
+        <div class="resume-col-title">Work · 工作经历</div>
+        <div class="timeline-item fade-up">
+          <div class="timeline-period">2022.7 — 2022.8</div>
+          <div class="timeline-role">资料员</div>
+          <div class="timeline-org">成都同创教育有限公司</div>
+          <div class="timeline-desc">处理资料制作工作流程，审核各类职称申报，检查社保及公司存续情况</div>
+        </div>
+        <div class="timeline-item fade-up delay-1">
+          <div class="timeline-period">2023.3 — 2023.8</div>
+          <div class="timeline-role">软装设计师助理</div>
+          <div class="timeline-org">成都葚莎家居有限公司</div>
+          <div class="timeline-desc">了解软装产品生产工艺，量尺并制作效果图方案，与客户持续沟通修改</div>
+        </div>
+        <div class="timeline-item fade-up delay-2">
+          <div class="timeline-period">2025.1 — 2025.2</div>
+          <div class="timeline-role">助教</div>
+          <div class="timeline-org">成都博睿教育</div>
+          <div class="timeline-desc">制作题库，排版，制作小学数学 2–6 年级 PPT</div>
+        </div>
+        <div class="timeline-item fade-up delay-3">
+          <div class="timeline-period">2025.7 — 2025.10</div>
+          <div class="timeline-role">设计助理</div>
+          <div class="timeline-org">成都圣瑞商业管理有限公司</div>
+          <div class="timeline-desc">参与商业项目定位与风格制定，负责效果实施，协调解决施工问题，绘制相关图纸</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="awards-list">
+      <div class="awards-col-title">Honors &amp; Awards · 荣誉证书</div>
+      <div class="award-item fade-up">
+        <div class="award-year">2020–21</div>
+        <div class="award-desc">四川建筑职业技术学院二等奖学金、三等奖学金；学院校刊《流水藏海》优秀作者</div>
+      </div>
+      <div class="award-item fade-up">
+        <div class="award-year">2021–22</div>
+        <div class="award-desc">国家励志奖学金、院二等奖学金；四川高校环艺大展二等奖；英语四级；计算机二级</div>
+      </div>
+      <div class="award-item fade-up">
+        <div class="award-year">2022–23</div>
+        <div class="award-desc">1+X职业技能等级证书室内设计中级；院三等学生；院优秀心理干事；校优秀毕业生</div>
+      </div>
+      <div class="award-item fade-up">
+        <div class="award-year">2023–24</div>
+        <div class="award-desc">初级会计证书；西南交通大学希望学院三等奖学金</div>
+      </div>
+      <div class="award-item fade-up">
+        <div class="award-year">2024–25</div>
+        <div class="award-desc">国家励志奖学金、学院二等奖学金；第13届未来设计师·全国高校数字艺术设计大赛四川赛区三等奖；东方设计奖全国高校创新设计大赛四川赛区三等奖、全国决赛二等奖；全国三维数字化创新设计大赛四川赛区二、三等奖；第十届两岸新锐设计竞赛·华灿奖四川赛区三等奖</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Portfolio -->
+<section id="portfolio">
+  <div class="container">
+    <div class="section-label">03 — Works</div>
+    <div class="section-title">作品选集</div>
+    <div class="portfolio-intro">
+      <p class="portfolio-intro-text">
+        Personal work collection 2020—2026，涵盖室内软装、建筑设计、景观规划、商业空间及手绘构成等多个方向，是六年学习与实践的沉淀。
+      </p>
+      <div style="text-align:right">
+        <button class="btn-outline" onclick="openPDF()"><span>查看完整作品集 PDF →</span></button>
+      </div>
+    </div>
+
+    <div class="projects-grid">
+
+
+      <!-- 03 目木 -->
+      <div class="project-card fade-up">
+        <div class="project-thumb">
+          <img src="Enscape_2022-05-07-16-04-10.png" alt="目木酒店月洞门" style="width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(20%);transition:filter 0.5s,transform 0.7s;">
+        </div>
+        <div class="project-info">
+          <div class="project-cat">Hotel · Interior</div>
+          <div class="project-name">目木酒店项目</div>
+          <div class="project-name-en">Mumu Hotel Project</div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </div>
+      <!-- 04 你好视界 large with real photo -->
+      <div class="project-card large fade-up">
+        <div class="project-thumb">
+          <img src="Enscape_2022-05-30-09-35-42.png" alt="你好视界办公空间开放区">
+          <div class="project-thumb-placeholder thumb-4" style="position:absolute;inset:0;z-index:-1;"><div class="thumb-num">04</div></div>
+        </div>
+        <div class="project-info">
+          <div class="project-cat">Office · Interior Design</div>
+          <div class="project-name">你好视界 · 办公空间</div>
+          <div class="project-name-en">Nihao Vision Office — Biophilic Workspace</div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </div>
+      <!-- 05 山地旅馆 large with real photo -->
+      <div class="project-card fade-up">
+        <div class="project-thumb">
+          <img src="21.jpg" alt="山地旅馆雪景外观">
+          <div class="project-thumb-placeholder thumb-5" style="position:absolute;inset:0;z-index:-1;"><div class="thumb-num">05</div></div>
+        </div>
+        <div class="project-info">
+          <div class="project-cat">Mountain · Architecture</div>
+          <div class="project-name">山地旅馆——境</div>
+          <div class="project-name-en">Mountain Lodge · Realm</div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </div>
+
+
+      <!-- 08 商业街 large with video -->
+      <div class="project-card large fade-up" onclick="openVideoModal()">
+        <div class="project-thumb" style="position:relative;">
+          <div class="project-thumb-placeholder thumb-8" style="aspect-ratio:16/9;position:relative;">
+            <div class="thumb-num">08</div>
+            <div class="video-play-hint">
+              <svg viewBox="0 0 24 24" width="40" height="40" fill="rgba(255,255,255,0.7)"><path d="M8 5v14l11-7z"/></svg>
+              <span>播放漫游视频</span>
+            </div>
+          </div>
+        </div>
+        <div class="project-info">
+          <div class="project-cat">Commercial · Street · <span style="color:var(--black);font-weight:400;">▶ Video</span></div>
+          <div class="project-name">商业街设计——九曲流觞</div>
+          <div class="project-name-en">Nine-Bend Flowing · Animated Walkthrough</div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </div>
+      <!-- 09 高层建筑 with real photo -->
+      <div class="project-card fade-up">
+        <div class="project-thumb">
+          <img src="01.jpg" alt="春和蝶序高层建筑夜景">
+          <div class="project-thumb-placeholder thumb-9" style="position:absolute;inset:0;z-index:-1;"><div class="thumb-num">09</div></div>
+        </div>
+        <div class="project-info">
+          <div class="project-cat">High-rise · Architecture</div>
+          <div class="project-name">高层建筑——春和蝶序</div>
+          <div class="project-name-en">Spring and Butterfly</div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </div>
+    </div>
+
+    <!-- 春和蝶序 Featured -->
+    <div class="spring-feature fade-up" id="springFeature">
+      <!-- Slideshow hero -->
+      <div class="spring-hero">
+        <div class="spring-slides" id="springSlides">
+          <div class="spring-slide active"><img src="04.jpg" alt="春和蝶序 全景夜景"></div>
+          <div class="spring-slide"><img src="01.jpg" alt="春和蝶序 城市天际"></div>
+          <div class="spring-slide"><img src="10.jpg" alt="春和蝶序 水岸视角"></div>
+          <div class="spring-slide"><img src="09.jpg" alt="春和蝶序 斜角鸟瞰"></div>
+          <div class="spring-slide"><img src="13.jpg" alt="春和蝶序 裙楼入口"></div>
+          <div class="spring-slide"><img src="07.jpg" alt="春和蝶序 退台屋顶"></div>
+        </div>
+        <div class="spring-hero-overlay">
+          <div class="spring-hero-text">
+            <div class="spring-hero-cat">09 · High-rise Architecture · Urban Landmark</div>
+            <div class="spring-hero-title">春和<br><em>蝶序</em></div>
+            <div class="spring-hero-sub">Spring and Butterfly · 超高层建筑设计</div>
+            <div class="spring-dots" id="springDots">
+              <div class="spring-dot active" onclick="goSpring(0)"></div>
+              <div class="spring-dot" onclick="goSpring(1)"></div>
+              <div class="spring-dot" onclick="goSpring(2)"></div>
+              <div class="spring-dot" onclick="goSpring(3)"></div>
+              <div class="spring-dot" onclick="goSpring(4)"></div>
+              <div class="spring-dot" onclick="goSpring(5)"></div>
+            </div>
+          </div>
+          <div class="spring-hero-nav">
+            <button class="spring-nav-btn" onclick="stepSpring(-1)">←</button>
+            <button class="spring-nav-btn" onclick="stepSpring(1)">→</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thumbnail row -->
+      <div class="spring-thumbrow">
+        <div class="spring-thumb-item active-thumb" onclick="goSpring(0)"><img src="04.jpg" alt="T1"></div>
+        <div class="spring-thumb-item" onclick="goSpring(1)"><img src="01.jpg" alt="T2"></div>
+        <div class="spring-thumb-item" onclick="goSpring(2)"><img src="10.jpg" alt="T3"></div>
+        <div class="spring-thumb-item" onclick="goSpring(3)"><img src="09.jpg" alt="T4"></div>
+      </div>
+
+      <!-- Concept text -->
+      <div class="spring-concept">
+        <div class="spring-concept-col">
+          <div class="spring-concept-label">命名溯源 · Nomenclature</div>
+          <div class="spring-concept-quote">
+            "至若春和景明，波澜不惊，上下天光，一碧万顷"
+          </div>
+          <div class="spring-concept-source">— 范仲淹《岳阳楼记》</div>
+          <br>
+          <div class="spring-concept-quote">
+            "暄迟蝶弄葩，景丽鸟和春"
+          </div>
+          <div class="spring-concept-source">— 《春郊诗》·「蝶」音同「叠」，「序」意为开始</div>
+        </div>
+        <div class="spring-concept-col">
+          <div class="spring-concept-label">设计理念 · Concept</div>
+          <div class="spring-concept-body">
+            整体形体由两块长方体切割堆叠而成，裙房部分切割为「心」形，意为「新」。高层与裙房由上至下逐层退台，退台绿化以曲线形展开，模仿冰雪消融的自然景象，展露盎然生机。<br><br>
+            出入口「Y」形支撑钢架，形同树木枝丫，象征蓬勃向上之态；高层中部两个扭转体量如人舒展身体、迎接美好一天，象征城市积极向上、朝气蓬勃的精神气质。<br><br>
+            建筑现代通透，与周边水域景观资源相互映衬，以春日暖阳之姿为城市带来光明与希望，成为城市天际线上的地标。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 瑧玥映天华 居住区 Featured -->
+    <div class="resi-feature fade-up">
+      <!-- Full-width hero: 鸟瞰总平面 -->
+      <div class="resi-hero">
+        <img src="3-1.png" alt="瑧玥映天华 总平面鸟瞰">
+        <div class="resi-hero-overlay">
+          <div class="resi-hero-title-wrap">
+            <div class="resi-hero-cat">13 · Residential Planning · Urban Community</div>
+            <div class="resi-hero-title">瑧玥映天华</div>
+            <div class="resi-hero-en">Zhenyue Yingtianhua · Residential Area Planning</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Concept -->
+      <div class="resi-concept">
+        <div class="resi-concept-left">
+          <div class="resi-concept-label">命名寓意 · Name</div>
+          <div class="resi-concept-name">
+            瑧玥映天华
+            <span>精美·珍贵·与天地光华交相辉映</span>
+          </div>
+          <div class="resi-concept-body">
+            「瑧」意为精美、纯粹；「玥」意为珍贵；「映天华」意为与天地光华交相辉映。传递极致美好、空灵高远的居住境界，突出楼盘的典雅与奢华感。
+          </div>
+        </div>
+        <div class="resi-concept-right">
+          <div class="resi-concept-label">设计概念 · Concept</div>
+          <div class="resi-concept-body">
+            以玫瑰花为意向，根据花瓣形状进行组团分区，带给住户「爱意寄于玫瑰，浪漫终将不渝」的体验感。小区设有5种不同单元楼型，34栋楼宇的整体布局在空中俯瞰呈一支玫瑰花形态，单元楼名与其形态相互呼应，将建筑诗意化为生活的注脚。
+          </div>
+        </div>
+      </div>
+
+      <!-- Gallery: 2 per row, natural proportions -->
+      <div class="resi-imgrow">
+        <div class="resi-img-wrap"><img src="xiaoqudamen.png" alt="小区大门"></div>
+        <div class="resi-img-wrap"><img src="1.png" alt="沿街立面"></div>
+      </div>
+      <div class="resi-imgrow">
+        <div class="resi-img-wrap"><img src="4-1.png" alt="单元入户门厅"></div>
+        <div class="resi-img-wrap"><img src="7.png" alt="组团院落"></div>
+      </div>
+      <div class="resi-imgrow">
+        <div class="resi-img-wrap"><img src="10.png" alt="低层洋房组团"></div>
+        <div class="resi-img-wrap"><img src="14.png" alt="运动场地景观"></div>
+      </div>
+      <div class="resi-imgrow">
+        <div class="resi-img-wrap"><img src="15.png" alt="园区绿化景观"></div>
+        <div class="resi-img-wrap"><img src="17.png" alt="高层住宅群"></div>
+      </div>
+      <div class="resi-imgrow">
+        <div class="resi-img-wrap"><img src="18.png" alt="多层住宅立面"></div>
+        <div class="resi-img-wrap"><img src="3-1.png" alt="总平面鸟瞰"></div>
+      </div>
+    </div>
+
+    <!-- divider -->
+    <div style="height:80px;background:var(--white);border-top:1px solid var(--gray-100);display:flex;align-items:center;justify-content:center;"><span style="font-family:'Cormorant Garamond',serif;font-size:0.65rem;letter-spacing:0.5em;color:var(--gray-300);text-transform:uppercase;">· · ·</span></div>
+
+    <!-- 山地博物馆 Featured -->
+    <div class="museum-feature fade-up" style="padding-top:60px;">
+      <div class="museum-row2">
+        <div class="museum-img-wrap"><img src="6.jpg" alt="山地博物馆正立面"></div>
+        <div class="museum-img-wrap"><img src="11.jpg" alt="山地博物馆穹顶结构内景"></div>
+      </div>
+      <div class="museum-row2" style="margin-top:3px;">
+        <div class="museum-img-wrap"><img src="7.jpg" alt="山地博物馆鸟瞰"></div>
+        <div class="museum-img-wrap"><img src="15.jpg" alt="山地博物馆侧面"></div>
+      </div>
+      <div class="museum-info-bar">
+        <div class="museum-num-big">12</div>
+        <div class="museum-meta">
+          <div class="museum-meta-cat">12 · Architecture · Mountain Museum</div>
+          <div class="museum-meta-title">山地博物馆</div>
+          <div class="museum-meta-en">Mountain Museum — Parametric Steel Dome</div>
+        </div>
+        <div class="museum-desc-col">
+          <p>以仿生参数化穹顶覆盖主展厅，钢构网格在光影中编织出疏密有致的纹理。建筑与梯田地景对话，刚柔相济，于山地之间呈现出当代建筑结构之美。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 你好视界 办公空间 Featured -->
+    <div class="nihao-feature fade-up">
+      <div class="nihao-inner">
+        <div class="nihao-text-col">
+          <div class="nihao-cat">04 · Office · Biophilic Workspace</div>
+          <div class="nihao-title">Nihao<br>Vision</div>
+          <div class="nihao-title-cn">你好视界 · 办公空间</div>
+          <div class="nihao-rule"></div>
+          <div class="nihao-desc">采用大量流动曲线线条作为修饰与功能，倡导绿色自然，运用丰富色彩，让员工在繁忙的工作状态中得到放松。设有洽谈、娱乐、餐饮等多功能区域，让大家在愉快的氛围中工作，从而获得更高的工作效率。</div>
+        </div>
+        <div class="nihao-hero">
+          <img src="Enscape_2022-05-30-09-35-42.png" alt="你好视界开放办公区">
+        </div>
+      </div>
+      <div class="nihao-strip">
+        <div class="ns-img">
+          <img src="Enscape_2022-05-30-08-38-37.png" alt="你好视界前台区域">
+        </div>
+        <div class="ns-img">
+          <img src="Enscape_2022-05-30-09-53-32.png" alt="你好视界休闲洽谈区">
+        </div>
+        <div class="ns-img">
+          <img src="Enscape_2022-06-01-16-16-56.png" alt="你好视界茶水间">
+        </div>
+      </div>
+    </div>
+
+    <!-- 目木酒店 Featured -->
+    <div class="mumu-feature fade-up">
+      <div class="mumu-inner">
+        <div class="mumu-gallery">
+          <div class="mm-main">
+            <img src="Enscape_2022-05-10-10-55-11.png" alt="目木酒店中庭亭台">
+          </div>
+          <div class="mm-row">
+            <div class="mm-img">
+              <img src="Enscape_2022-05-07-16-04-10.png" alt="目木酒店月洞门">
+            </div>
+            <div class="mm-img">
+              <img src="Enscape_2022-05-13-16-54-18.png" alt="目木酒店竹影禅室">
+            </div>
+          </div>
+          <div class="mm-row">
+            <div class="mm-img">
+              <img src="Enscape_2022-05-11-16-48-50.png" alt="目木酒店大堂内院">
+            </div>
+            <div class="mm-img">
+              <img src="Enscape_2022-05-12-09-31-14.png" alt="目木酒店外立面庭院">
+            </div>
+          </div>
+        </div>
+        <div class="mumu-text">
+          <div class="mumu-cat">03 · Hotel · Chinese Classical</div>
+          <div class="mumu-title">目木</div>
+          <div class="mumu-title-cn">Mumu Hotel · 新中式酒店</div>
+          <div class="mumu-rule"></div>
+          <div class="mumu-desc">以新中式建筑语言构筑东方意境。月洞门、亭台水榭、竹影禅室，将传统建筑精髓融入当代空间叙事，营造出静谧而富有文化深度的居住体验。</div>
+          <div class="mumu-num">03</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ZS Coffee Featured -->
+    <div class="zs-feature fade-up">
+      <!-- Top: 3 images in a row, each 16:9, no cropping -->
+      <div class="zs-imgrow">
+        <div class="zs-imgrow-item">
+          <img src="Enscape_2022-12-23-10-07-05.png" alt="ZS Coffee Interior">
+        </div>
+        <div class="zs-imgrow-item">
+          <img src="Enscape_2022-12-11-16-14-18.png" alt="ZS Coffee Counter">
+        </div>
+        <div class="zs-imgrow-item">
+          <img src="Enscape_2022-12-22-11-56-54.png" alt="ZS Coffee FACE">
+        </div>
+      </div>
+      <!-- Bottom: text left + aerial right -->
+      <div class="zs-bottom">
+        <div class="zs-text">
+          <div class="zs-cat">10 · Commercial · Coffee Shop</div>
+          <div class="zs-title">ZERO<br>STRESS</div>
+          <div class="zs-subtitle">ZS咖啡店项目</div>
+          <div class="zs-rule"></div>
+          <div class="zs-desc">
+            一个将乐高融于碎片生活的咖啡店。<br><br>
+            当下孩子与父母之间永远隔着一部手机，忙碌而焦虑的年轻人无法发泄自己的情绪——希望他们都能在此释放天性，感受生活的乐趣。
+          </div>
+        </div>
+        <div class="zs-aerial">
+          <img src="5.png" alt="ZS Coffee Aerial View">
+        </div>
+      </div>
+    </div>
+
+    <!-- 山地旅馆 Featured -->
+    <div class="mountain-feature fade-up">
+      <div class="mountain-hero-wrap">
+        <img src="26.jpg" alt="山地旅馆全景鸟瞰">
+        <div class="mountain-overlay">
+          <div class="mountain-overlay-text">
+            <span class="mountain-ol-num">05</span>
+            <span class="mountain-ol-title">境</span>
+            <span class="mountain-ol-en">Mountain Lodge · Realm</span>
+          </div>
+        </div>
+      </div>
+      <div class="mountain-body">
+        <div class="mountain-left">
+          <div class="mountain-cat">05 · Architecture · Mountain Lodge</div>
+          <div class="mountain-title">山地旅馆<br><em>——境</em></div>
+          <div class="mountain-rule"></div>
+          <div class="mountain-desc">以山为形，以境为名。建筑依山势而卧，以大面积玻璃幕墙迎接林间漫射光，尖锐的折板屋顶呼应远山轮廓。冬雪覆盖之下，建筑与自然的边界消隐，归隐山林之境油然而生。</div>
+        </div>
+        <div class="mountain-right">
+          <div class="mountain-sub-grid">
+            <div class="msub-img">
+              <img src="21.jpg" alt="山地旅馆主楼外观">
+            </div>
+            <div class="msub-img">
+              <img src="23.jpg" alt="山地旅馆水景倒影">
+            </div>
+            <div class="msub-img msub-wide">
+              <img src="1.jpg" alt="山地旅馆客房组团">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 谧海民宿 Featured -->
+    <div class="mihai-feature fade-up">
+      <div class="mihai-header">
+        <div>
+          <div class="mihai-cat">11 · Hospitality · Boutique Hotel</div>
+          <div class="mihai-title">谧海</div>
+          <div class="mihai-subtitle">Mihai · 民宿建筑设计</div>
+          <div class="mihai-rule"></div>
+          <div class="mihai-desc">
+            建于悬崖之上，欣赏落日余晖，俯瞰海浪缱绻与归航渔船，体验自然野奢趣味。乘着波光穿越绵长海岸线，踏着柔软的沙砾与白色浪花，开启一场海的旅行。
+          </div>
+        </div>
+        <div style="text-align:right;align-self:flex-end;">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:7rem;font-weight:300;color:var(--gray-100);line-height:1;letter-spacing:-0.04em;display:block;">11</span>
+        </div>
+      </div>
+
+      <!-- Top: hero left + 2 stacked right -->
+      <div class="mihai-gallery-top">
+        <div class="mg-hero">
+          <img src="Enscape_2022-09-17-14-54-15.png" alt="谧海露台浴缸与海景">
+        </div>
+        <div class="mg-side">
+          <div class="mg-img">
+            <img src="Enscape_2022-09-15-16-08-41.png" alt="谧海客房拱门">
+          </div>
+          <div class="mg-img">
+            <img src="Enscape_2022-09-15-17-12-38.png" alt="谧海卧室镂空屏风">
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom: 3 equal -->
+      <div class="mihai-gallery-bottom">
+        <div class="mg-img">
+          <img src="Enscape_2022-09-20-16-01-46.png" alt="谧海户外酒吧与泳池">
+        </div>
+        <div class="mg-img">
+          <img src="Enscape_2022-10-05-12-38-31.png" alt="谧海室内餐厅海景">
+        </div>
+        <div class="mg-img">
+          <img src="Enscape_2022-09-29-12-33-22.png" alt="谧海屋顶露台烧烤区">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="container" style="width:100%">
+    <div class="contact-grid">
+      <div>
+        <div class="section-label" style="color:var(--gray-500)">04 — Contact</div>
+        <div class="contact-headline">
+          Let's<br>
+          <em>work</em><br>
+          together.
+        </div>
+      </div>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-item-label">Phone</div>
+          <a href="tel:18280059248" class="contact-item-value">182 8005 9248</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-label">Email</div>
+          <a href="mailto:269889153@qq.com" class="contact-item-value">269889153@qq.com</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-label">Location</div>
+          <span class="contact-item-value">成都市新都区金都街208号</span>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-label">Direction</div>
+          <span class="contact-item-value" style="font-size:0.88rem;font-family:'Noto Serif SC',serif;">设计助理 · 工程项目管理方向</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Song Niqian · 宋妮倩</span>
+  <span>Personal Work Collection · 2020—2026</span>
+</footer>
+
+<!-- Video Modal -->
+<div class="video-modal" id="videoModal">
+  <div class="video-modal-inner">
+    <button class="video-close" onclick="closeVideoModal()">Close ✕</button>
+    <div style="position:relative;width:100%;aspect-ratio:640/360;">
+      <iframe
+        src="https://player.cloudinary.com/embed/?cloud_name=du7vfrdvr&public_id=5%E6%9C%8831%E6%97%A5_deekpb"
+        style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+        allowfullscreen
+        frameborder="0"
+      ></iframe>
+    </div>
+    <div class="video-title-bar">
+      <span>商业街设计——九曲流觞</span>
+      <span>Commercial Street Design · Nine-Bend Flowing</span>
+    </div>
+  </div>
+</div>
+
+<!-- PDF Modal -->
+<div class="pdf-modal" id="pdfModal">
+  <div class="pdf-modal-inner">
+    <button class="pdf-close" onclick="closePDF()">Close ✕</button>
+    <div style="display:flex;gap:16px;position:absolute;top:-46px;left:0;align-items:center;">
+      <a id="pdfNewTab" href="新作品集.pdf" target="_blank" style="padding:8px 20px;border:1px solid rgba(255,255,255,0.3);color:var(--gray-300);font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;">在新窗口打开 ↗</a>
+      <a id="pdfDownload" href="新作品集.pdf" download="新作品集.pdf" style="padding:8px 20px;border:1px solid rgba(255,255,255,0.15);color:var(--gray-500);font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;">下载 ↓</a>
+    </div>
+    <object id="pdfObject" data="" type="application/pdf" style="width:100%;height:100%;border:none;">
+      <iframe id="pdfFrame" src="" style="width:100%;height:100%;border:none;"></iframe>
+    </object>
+  </div>
+</div>
+
+<script>
+  // ── Cursor ──
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function animCursor(){
+    cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+    rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(animCursor);
+  })();
+  document.querySelectorAll('a,button,.project-card,.skill-tag,.btn-outline,.zs-gallery-img').forEach(el=>{
+    el.addEventListener('mouseenter',()=>ring.classList.add('expand'));
+    el.addEventListener('mouseleave',()=>ring.classList.remove('expand'));
+  });
+
+  // ── Nav ──
+  const nav=document.getElementById('nav');
+  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+
+  // ── Scroll fade ──
+  const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.08});
+  document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+  // ── Music (Pebble-inspired: sparse piano + water-texture ambient) ──
+  const playIcon=document.getElementById('playIcon');
+  const pauseIcon=document.getElementById('pauseIcon');
+  const bars=document.getElementById('musicBars');
+  let playing=false;
+  let audioCtx=null, masterGain=null, musicTimer=null;
+
+  function makeReverb(ctx, dur, decay){
+    const sr=ctx.sampleRate, len=sr*dur;
+    const buf=ctx.createBuffer(2,len,sr);
+    for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);}
+    const conv=ctx.createConvolver(); conv.buffer=buf; return conv;
+  }
+
+  function buildAmbient(){
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    masterGain=audioCtx.createGain();
+    masterGain.gain.setValueAtTime(0,audioCtx.currentTime);
+    masterGain.connect(audioCtx.destination);
+
+    // Long hall reverb
+    const reverb=makeReverb(audioCtx,5,1.8);
+    const rvbGain=audioCtx.createGain(); rvbGain.gain.value=0.7;
+    reverb.connect(rvbGain); rvbGain.connect(masterGain);
+
+    // Short room reverb for piano
+    const shortRvb=makeReverb(audioCtx,1.4,3);
+    const srvbGain=audioCtx.createGain(); srvbGain.gain.value=0.5;
+    shortRvb.connect(srvbGain); srvbGain.connect(masterGain);
+
+    // ── Water texture (filtered noise) ──
+    function makeWater(){
+      const bufSize=audioCtx.sampleRate*4;
+      const noiseBuf=audioCtx.createBuffer(1,bufSize,audioCtx.sampleRate);
+      const nd=noiseBuf.getChannelData(0);
+      for(let i=0;i<bufSize;i++)nd[i]=Math.random()*2-1;
+      const noise=audioCtx.createBufferSource();
+      noise.buffer=noiseBuf; noise.loop=true;
+      // Bandpass → feels like water ripples
+      const bp=audioCtx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=800; bp.Q.value=0.4;
+      const bp2=audioCtx.createBiquadFilter(); bp2.type='bandpass'; bp2.frequency.value=3200; bp2.Q.value=0.6;
+      const wg=audioCtx.createGain(); wg.gain.value=0.022;
+      // LFO for gentle ripple movement
+      const lfo=audioCtx.createOscillator(); lfo.frequency.value=0.18;
+      const lfog=audioCtx.createGain(); lfog.gain.value=0.009;
+      lfo.connect(lfog); lfog.connect(wg.gain); lfo.start();
+      noise.connect(bp); bp.connect(bp2); bp2.connect(wg);
+      wg.connect(reverb); wg.connect(masterGain);
+      noise.start();
+    }
+    makeWater();
+
+    // ── Ambient pad (C pentatonic: C3 G3 A3 E4) ──
+    [[130.8,'sine',0.09],[196,'sine',0.06],[220,'triangle',0.05],[329.6,'sine',0.04]].forEach(([f,t,v])=>{
+      const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+      const lfo=audioCtx.createOscillator(), lg=audioCtx.createGain();
+      o.type=t; o.frequency.value=f; g.gain.value=v;
+      lfo.frequency.value=0.05+Math.random()*0.04; lg.gain.value=v*0.12;
+      lfo.connect(lg); lg.connect(g.gain); lfo.start();
+      o.connect(g); g.connect(reverb); o.start();
+    });
+
+    // ── Sparse piano notes (pentatonic: C4 E4 G4 A4 C5 G3) ──
+    const pianoNotes=[261.6,329.6,392,440,523.2,196,261.6,392,440,329.6];
+    // Simulate piano with overlapping sine + detuned harmonic
+    function playPianoNote(freq, time, vel){
+      [1,2,3,4].forEach((harmonic,hi)=>{
+        const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+        o.type='sine';
+        o.frequency.value=freq*harmonic*(1+hi*0.0008); // slight inharmonicity
+        const pk=vel*(hi===0?0.25:0.07/harmonic);
+        g.gain.setValueAtTime(0,time);
+        g.gain.linearRampToValueAtTime(pk,time+0.01);
+        g.gain.exponentialRampToValueAtTime(pk*0.4,time+0.3);
+        g.gain.exponentialRampToValueAtTime(0.0001,time+2.8+hi*0.4);
+        o.connect(g); g.connect(shortRvb); g.connect(masterGain);
+        o.start(time); o.stop(time+3.5);
+      });
+    }
+
+    // Pebble-style sparse melodic pattern — notes fall like drops
+    const pattern=[
+      {n:0,t:0},{n:2,t:2.8},{n:4,t:5.2},{n:1,t:8.1},
+      {n:3,t:10.5},{n:5,t:13.2},{n:0,t:16},{n:4,t:18.6},
+      {n:2,t:21.3},{n:3,t:24},{n:1,t:26.8},{n:5,t:29.5},
+      {n:4,t:32},{n:0,t:34.8},{n:2,t:37.4},{n:3,t:40},
+    ];
+    const loopDur=43;
+    function schedulePiano(offset){
+      pattern.forEach(({n,t})=>{
+        const absT=audioCtx.currentTime+offset+t;
+        if(absT>audioCtx.currentTime) playPianoNote(pianoNotes[n],absT,0.5+Math.random()*0.25);
+      });
+    }
+    schedulePiano(1.5);
+    musicTimer=setInterval(()=>{ if(playing) schedulePiano(0); },loopDur*1000);
+
+    // Fade in
+    masterGain.gain.linearRampToValueAtTime(0.55,audioCtx.currentTime+3);
+  }
+
+  function toggleMusic(){
+    if(!playing){
+      if(!audioCtx) buildAmbient();
+      else if(audioCtx.state==='suspended') audioCtx.resume();
+      masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+      masterGain.gain.linearRampToValueAtTime(0.55,audioCtx.currentTime+2.5);
+      playing=true;
+      playIcon.style.display='none'; pauseIcon.style.display='block';
+      bars.classList.remove('paused');
+    } else {
+      masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+      masterGain.gain.linearRampToValueAtTime(0,audioCtx.currentTime+2);
+      playing=false;
+      playIcon.style.display='block'; pauseIcon.style.display='none';
+      bars.classList.add('paused');
+    }
+  }
+
+
+
+  // ── 春和蝶序 Slideshow ──
+  let springIdx = 0;
+  const springTotal = 6;
+  function goSpring(n) {
+    springIdx = (n + springTotal) % springTotal;
+    document.getElementById('springSlides').style.transform = `translateX(-${springIdx * 100}%)`;
+    document.querySelectorAll('.spring-slide').forEach((s,i) => s.classList.toggle('active', i===springIdx));
+    document.querySelectorAll('.spring-dot').forEach((d,i) => d.classList.toggle('active', i===springIdx));
+    document.querySelectorAll('.spring-thumb-item').forEach((t,i) => t.classList.toggle('active-thumb', i===springIdx));
+  }
+  function stepSpring(dir) { goSpring(springIdx + dir); }
+  // Auto-advance every 5s
+  setInterval(() => { goSpring(springIdx + 1); }, 5000);
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') stepSpring(1);
+    if (e.key === 'ArrowLeft') stepSpring(-1);
+  });
+
+  // ── Video Modal ──
+  function openVideoModal(){
+    document.getElementById('videoModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeVideoModal(){
+    document.getElementById('videoModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('videoModal').addEventListener('click', function(e){
+    if(e.target === this) closeVideoModal();
+  });
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') { closeVideoModal(); closePDF(); }
+  });
+
+  // ── PDF ──
+  function openPDF(){
+    // 直接新标签打开，本地和线上均可用
+    window.open('新作品集.pdf', '_blank');
+  }
+  function closePDF(){
+    document.getElementById('pdfModal').classList.remove('open');
+    document.getElementById('pdfObject').data = '';
+    document.getElementById('pdfFrame').src = '';
+    document.body.style.overflow = '';
+  }
+  document.getElementById('pdfModal').addEventListener('click',function(e){if(e.target===this)closePDF();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closePDF();});
+</script>
+</body>
+</html>
