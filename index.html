@@ -751,7 +751,7 @@
   .video-modal { display:none; position:fixed; inset:0; z-index:210; background:rgba(0,0,0,0.97); align-items:center; justify-content:center; }
   .video-modal.open { display:flex; }
   .video-modal-inner { width:90vw; max-width:1100px; position:relative; }
-  .video-modal-inner video { width:100%; display:block; background:#000; }
+  .video-modal-inner iframe {width: 100%;height:60vh;display:block;border:none;background:#000;}
   .video-close { position:absolute; top:-46px; right:0; background:none; border:1px solid var(--gray-700); color:var(--white); padding:8px 20px; font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; cursor:none; transition:all 0.3s; }
   .video-close:hover { background:var(--white); color:var(--black); }
   .video-title-bar { padding:16px 0 0; display:flex; justify-content:space-between; align-items:baseline; }
@@ -1433,8 +1433,15 @@
 </footer>
 
 <!-- Video Modal -->
-<div class="video-modal" id="videoModal">
-  <div class="video-modal-inner">
+<div class="video-modal-inner">
+  <div class="video-bg">
+    <iframe
+      src="https://player.cloudinary.com/embed/?cloud_name=du7vfrdvr&public_id=5%E6%9C%8831%E6%97%A5_deekpb"
+      allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
     <button class="video-close" onclick="closeVideoModal()">Close ✕</button>
     <video id="projectVideo" controls preload="none" playsinline>
       <source src="lv_0_20241024220627.mp4" type="video/mp4">
